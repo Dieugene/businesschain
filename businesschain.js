@@ -66,6 +66,46 @@ function init(email, password) {
 
     async function getProjectData(acceleratorId, templateId, trackPointId, projectId) {
 
+        function find(valueObjects = [], objectId) {
+            let value = '', valueObj = valueObjects.find(obj => obj.objectId === objectId);
+            if (valueObj) value = valueObj.strValue;
+            return value;
+        }
+
+        function getRows(elementObjects = [], elementId) {
+            let section = values.find(s => s.sectionElementId === elementId),
+                rows = [];
+            if (section) {
+                section.rows.forEach(row => {
+                    rows.push(elementObjects.map(obj => ({
+                        id: obj.object.id,
+                        name: obj.object.name,
+                        code: obj.object.code,
+                        value: find(row.objectValues, obj.object.id)
+                    })))
+                })
+            }
+            return rows;
+        }
+
+        let template = await getTemplate(templateId),
+            values = await getProjectValues(acceleratorId, templateId, trackPointId, projectId),
+            result = {
+                sections: template.templateSections.map(section => ({
+                    name: section.name,
+                    elements: section.sectionElements.map(elem => ({
+                        id: elem.id,
+                        name: elem.name,
+                        type: elem.type,
+                        rows: getRows(elem.elementObjects, elem.id)
+                    }))
+                }))
+            };
+        return result;
+    }
+
+    async function getProjectData_(acceleratorId, templateId, trackPointId, projectId) {
+
         function find(sectionElementId, objectId) {
             let section = values.find(s => s.sectionElementId === sectionElementId),
                 value = '';

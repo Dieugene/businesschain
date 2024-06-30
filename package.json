@@ -4,7 +4,7 @@
   },
   "name": "@dieugene/businesschain",
   "description": "Access to businesschain.io module",
-  "version": "2.4.1",
+  "version": "2.4.4",
   "main": "businesschain.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
