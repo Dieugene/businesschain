@@ -1,3 +1,4 @@
 .idea/
 node-modules/
 /businesschain.iml
+/node_modules
