@@ -212,6 +212,27 @@ function init(email, password) {
 
     getProjectData.values = getProjectValues;
 
+    async function getProjectListOnTrack(trackId, acceleratorId) {
+        console.log('BUSINESS CHAIN :: GETTING PROJECT LIST ON TRACK');
+        if (!creds) creds = await login(email, password);
+        let url = new URL('https://businesschain.io/api/v1/acceleration-summary/get-grid-filters');
+        url.searchParams.set('trackId', trackId);
+        let response = await fetch(url.href, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + creds.token,
+                    'Content-Type': 'application/json',
+                    "Accelerator-Id": acceleratorId
+                }
+            }),
+            resp = await response.json();
+        console.log(
+            'BUSINESS CHAIN :: GETTING PROJECT LIST ON TRACK :: RESULT :: ', JSON.stringify(resp));
+        return resp;
+    }
+
+    getProjectData.list = getProjectListOnTrack;
+
     return {
         login: reLogin,
         getTemplate: getPrettyTemplate,
